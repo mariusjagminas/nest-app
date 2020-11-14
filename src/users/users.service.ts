@@ -14,7 +14,8 @@ export class UsersService {
 
   async signUp(dto: SignUpDto) {
     console.log('Auth service:', dto)
-    await this.userRepository.save(dto)
+    const { id } = await this.userRepository.save(dto)
+    console.log(id);
     return {}
   }
 }
