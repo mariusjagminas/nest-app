@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  main:
+    container_name: nest-app
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: postgres
+      
+    command: yarn start:dev
+
+  db:
+    container_name: postgres
+    image: postgres:10.4
+    environment:
+      - POSTGRES_USER:'postgres'
+      - POSTGRES_PASSWORD:'postgres'
+      - POSTGRES_DB:'postgres'
+
