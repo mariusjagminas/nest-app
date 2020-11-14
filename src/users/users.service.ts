@@ -9,11 +9,12 @@ import { SignUpDto } from './user.inteface';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User> 
-  ){}
+    private userRepository: Repository<User>
+  ) { }
 
-  signUp(dto: SignUpDto){
+  async signUp(dto: SignUpDto) {
     console.log('Auth service:', dto)
-    this.userRepository.save(dto)
+    await this.userRepository.save(dto)
+    return {}
   }
 }
