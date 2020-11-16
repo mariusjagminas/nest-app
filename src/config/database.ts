@@ -7,8 +7,8 @@ export const getDbConfig = () => ({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: ['src/**/*.entity{.ts,.js}'],
-  migrations: ['src/src/migrations/*.js'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/src/migrations/*.js'],
   cli: {
     migrationsDir: './src/migrations',
   },
