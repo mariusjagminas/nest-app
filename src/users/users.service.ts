@@ -8,7 +8,7 @@ import { throwError } from 'rxjs';
 
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { SignUpDto } from './user.inteface';
+import { SignUpDto, SignUpResponse } from './user.inteface';
 
 @Injectable()
 export class UsersService {
@@ -19,13 +19,12 @@ export class UsersService {
 
   async signUp(dto: SignUpDto) {
     try {
-      const { id } = await this.userRepository.save(dto);
+      const { id, email }: SignUpResponse = await this.userRepository.save(dto);
+      return { id, email };
     } catch (err) {
       if (err.code === '23505') {
         throw new ForbiddenException('This email is already registered');
       }
     }
-
-    return {};
   }
 }

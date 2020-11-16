@@ -52,7 +52,8 @@ describe('UsersController', () => {
       .send(mockedRequest)
       .expect(201);
 
-    expect(result.body).toEqual({});
+    expect(result.body.email).toBe(mockedRequest.email);
+    expect(result.body.id).not.toBe(null);
 
     const userRepository = getRepository(User);
     const user = await userRepository.findOne({ email: mockedRequest.email });
