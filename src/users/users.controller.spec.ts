@@ -74,4 +74,14 @@ describe('UsersController', () => {
       statusCode: 403,
     })
   })
+
+  it('should return 400 error if email is missing in request', async () => {
+    const result = await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .set('Content-Type', 'application/json')
+      .send({ password: 'new-password' })
+      .expect(400);
+
+    // expect(result).toEqual({})
+  })
 });
