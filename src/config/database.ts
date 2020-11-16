@@ -7,6 +7,10 @@ export const getDbConfig = () => ({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  autoLoadEntities: true,
-  synchronize: true
+  entities: ['src/**/*.entity{.ts,.js}'],
+  migrations: ['src/src/migrations/*.js'],
+  cli: {
+    migrationsDir: './src/migrations',
+  },
+  synchronize: false
 }) as ConnectionOptions;
