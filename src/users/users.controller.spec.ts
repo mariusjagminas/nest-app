@@ -7,6 +7,7 @@ import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { getRepository } from 'typeorm';
+import { SignUpDto } from './user.inteface';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -26,15 +27,18 @@ describe('UsersController', () => {
     await app.init();
 
     controller = module.get<UsersController>(UsersController);
-  });
-
-  beforeEach(async () => {
     await clearDatabase();
   });
 
   afterAll(async () => {
     await app.close();
   });
+
+
+  const mockedRequest: SignUpDto = {
+    email: 'test-emailgmail.com',
+    password: 'test-pasword'
+  }
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -44,16 +48,30 @@ describe('UsersController', () => {
     const result = await request(app.getHttpServer())
       .post('/users/sign-up')
       .set('Content-Type', 'application/json')
-      .send({ email: 'testemail@gmail.com', password: 'test' })
+      .send(mockedRequest)
       .expect(201);
 
     expect(result.body).toEqual({})
 
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ email: 'testemail@gmail.com' });
+    const user = await userRepository.findOne({ email: mockedRequest.email });
 
     expect(user).not.toBe(null);
     expect(user.password).not.toBe(null)
-    expect(user.email).toBe('testemail@gmail.com')
+    expect(user.email).toBe(mockedRequest.email)
+  })
+
+  it('should fail create user with existing email in db', async () => {
+    const result = await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .set('Content-Type', 'application/json')
+      .send(mockedRequest)
+      .expect(403);
+
+    expect(result.body).toEqual({
+      error: "Forbidden",
+      message: "This email is already registered",
+      statusCode: 403,
+    })
   })
 });
