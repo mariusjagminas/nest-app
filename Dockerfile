@@ -1,11 +1,5 @@
-FROM node:12.18
+FROM node:12.18-buster
 
 WORKDIR /app
-
-COPY package.json ./ yarn.lock ./
-
-RUN yarn install
-
-COPY . .
 
 CMD ["yarn", "start"]
