@@ -9,10 +9,12 @@ import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { SignUpDto } from './user.inteface';
+import { Factory, getFactory } from '../../test/factories';
 
 describe('UsersController', () => {
   let controller: UsersController;
   let app: INestApplication;
+  let factory: Factory;
 
   beforeAll(async () => {
     const config = getTestDatabaseConfig();
@@ -28,12 +30,17 @@ describe('UsersController', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
+    factory = await getFactory();
+
     controller = module.get<UsersController>(UsersController);
-    await clearDatabase();
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  beforeEach(async () => {
+    await clearDatabase();
   });
 
   const mockedRequest: SignUpDto = {
@@ -64,6 +71,7 @@ describe('UsersController', () => {
   });
 
   it('should fail create user with existing email in db', async () => {
+    await factory.create<User>('User', { email: mockedRequest.email });
     const result = await request(app.getHttpServer())
       .post('/users/sign-up')
       .set('Content-Type', 'application/json')
