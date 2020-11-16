@@ -11,12 +11,16 @@ services:
       - .:/app
     depends_on:
       - db
+      - db-test
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: postgres
+      DB_TEST_USER: postgres
+      DB_TEST_PASSWORD: postgres
+      DB_TEST_DB: postgres
       
     command: yarn start:dev
 
@@ -27,4 +31,11 @@ services:
       - POSTGRES_USER:'postgres'
       - POSTGRES_PASSWORD:'postgres'
       - POSTGRES_DB:'postgres'
-
+  
+  db-test:
+    container_name: postgres-test
+    image: postgres:10.4
+    environment:
+      - POSTGRES_USER:'postgres'
+      - POSTGRES_PASSWORD:'postgres'
+      - POSTGRES_DB:'postgres'
