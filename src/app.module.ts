@@ -7,12 +7,8 @@ import { getDbConfig } from './config/database';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(getDbConfig()),
-    UsersModule,
-    AuthModule
-  ],
+  imports: [TypeOrmModule.forRoot(getDbConfig()), UsersModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

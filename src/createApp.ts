@@ -5,6 +5,6 @@ import { NestExpressApplication } from '@nestjs/platform-express/interfaces/nest
 import { AppModule } from './app.module';
 
 export const createApp = async () => {
-  const app =  await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   return app.useGlobalPipes(new ValidationPipe());
-}
+};

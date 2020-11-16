@@ -1,12 +1,13 @@
-import * as request from 'supertest'
+import * as request from 'supertest';
+import { getRepository } from 'typeorm';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { clearDatabase, getTestDatabaseConfig } from '../db/test-db';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { getRepository } from 'typeorm';
 import { SignUpDto } from './user.inteface';
 
 describe('UsersController', () => {
@@ -19,9 +20,9 @@ describe('UsersController', () => {
       controllers: [UsersController],
       imports: [
         TypeOrmModule.forRoot(config),
-        TypeOrmModule.forFeature([User])
+        TypeOrmModule.forFeature([User]),
       ],
-      providers: [UsersService]
+      providers: [UsersService],
     }).compile();
     app = module.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -35,11 +36,10 @@ describe('UsersController', () => {
     await app.close();
   });
 
-
   const mockedRequest: SignUpDto = {
     email: 'test-email@gmail.com',
-    password: 'test-pasword'
-  }
+    password: 'test-pasword',
+  };
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -52,15 +52,15 @@ describe('UsersController', () => {
       .send(mockedRequest)
       .expect(201);
 
-    expect(result.body).toEqual({})
+    expect(result.body).toEqual({});
 
     const userRepository = getRepository(User);
     const user = await userRepository.findOne({ email: mockedRequest.email });
 
     expect(user).not.toBe(null);
-    expect(user.password).not.toBe(null)
-    expect(user.email).toBe(mockedRequest.email)
-  })
+    expect(user.password).not.toBe(null);
+    expect(user.email).toBe(mockedRequest.email);
+  });
 
   it('should fail create user with existing email in db', async () => {
     const result = await request(app.getHttpServer())
@@ -70,11 +70,11 @@ describe('UsersController', () => {
       .expect(403);
 
     expect(result.body).toEqual({
-      error: "Forbidden",
-      message: "This email is already registered",
+      error: 'Forbidden',
+      message: 'This email is already registered',
       statusCode: 403,
-    })
-  })
+    });
+  });
 
   it('should return 400 error if email is missing in request', async () => {
     await request(app.getHttpServer())
@@ -82,7 +82,7 @@ describe('UsersController', () => {
       .set('Content-Type', 'application/json')
       .send({ password: 'new-password' })
       .expect(400);
-  })
+  });
 
   it('should return 400 error if password is missing in request', async () => {
     await request(app.getHttpServer())
@@ -90,5 +90,5 @@ describe('UsersController', () => {
       .set('Content-Type', 'application/json')
       .send({ email: 'new@test.com' })
       .expect(400);
-  })
+  });
 });
