@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { throwError } from 'rxjs';
 
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -13,9 +14,15 @@ export class UsersService {
   ) { }
 
   async signUp(dto: SignUpDto) {
-    console.log('Auth service:', dto)
-    const { id } = await this.userRepository.save(dto)
-    console.log(id);
+    try {
+      const { id } = await this.userRepository.save(dto)
+      console.log(id);
+    } catch (err) {
+      if (err.code ==='23505') {
+        throw new ForbiddenException('This email is already registered');
+      } 
+    }
+
     return {}
   }
 }
