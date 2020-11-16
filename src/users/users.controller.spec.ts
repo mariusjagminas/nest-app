@@ -1,5 +1,5 @@
 import * as request from 'supertest'
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { clearDatabase, getTestDatabaseConfig } from '../db/test-db';
@@ -24,6 +24,7 @@ describe('UsersController', () => {
       providers: [UsersService]
     }).compile();
     app = module.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
     controller = module.get<UsersController>(UsersController);
@@ -36,7 +37,7 @@ describe('UsersController', () => {
 
 
   const mockedRequest: SignUpDto = {
-    email: 'test-emailgmail.com',
+    email: 'test-email@gmail.com',
     password: 'test-pasword'
   }
 
@@ -76,12 +77,18 @@ describe('UsersController', () => {
   })
 
   it('should return 400 error if email is missing in request', async () => {
-    const result = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/users/sign-up')
       .set('Content-Type', 'application/json')
       .send({ password: 'new-password' })
       .expect(400);
+  })
 
-    // expect(result).toEqual({})
+  it('should return 400 error if password is missing in request', async () => {
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .set('Content-Type', 'application/json')
+      .send({ email: 'new@test.com' })
+      .expect(400);
   })
 });
