@@ -1,4 +1,4 @@
-import { ConnectionOptions } from "typeorm";
+import { ConnectionOptions, getConnection, getManager } from "typeorm";
 
 export const getTestDatabaseConfig = () => ({
   name: 'default',
@@ -16,3 +16,18 @@ export const getTestDatabaseConfig = () => ({
   synchronize: true,
 } as ConnectionOptions)
 
+export const clearDatabase = async () => {
+  await getManager().transaction(async tm => {
+    for (const entity of getConnection().entityMetadatas) {
+      if (entity.tableType !== 'regular') continue;
+      await tm.query(`ALTER TABLE "${entity.tableName}" DISABLE TRIGGER ALL;`);
+      await tm
+        .createQueryBuilder()
+        .delete()
+        .from(entity.target)
+        .where('1 = 1')
+        .execute();
+      await tm.query(`ALTER TABLE "${entity.tableName}" ENABLE TRIGGER ALL;`);
+    }
+  });
+};

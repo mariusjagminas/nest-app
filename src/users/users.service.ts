@@ -16,7 +16,6 @@ export class UsersService {
   async signUp(dto: SignUpDto) {
     try {
       const { id } = await this.userRepository.save(dto)
-      console.log(id);
     } catch (err) {
       if (err.code ==='23505') {
         throw new ForbiddenException('This email is already registered');
