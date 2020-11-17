@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
@@ -15,6 +16,7 @@ export class UsersService {
   ) {}
 
   async signUp(dto: SignUpDto) {
+    dto.password = await bcrypt.hash(dto.password, 10);
     try {
       const { id } = await this.userRepository.save(dto);
 
