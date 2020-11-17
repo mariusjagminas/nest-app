@@ -7,8 +7,3 @@ export class SignUpDto {
   @IsNotEmpty()
   password: string;
 }
-
-export interface SignUpResponse {
-  id: number;
-  email: string;
-}

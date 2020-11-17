@@ -21,7 +21,8 @@ services:
       DB_TEST_USER: postgres
       DB_TEST_PASSWORD: postgres
       DB_TEST_DB: postgres
-      
+      AUTH_JWT_SECRET: auth jwt secret
+
     command: yarn start:dev
 
   db:
@@ -31,7 +32,7 @@ services:
       - POSTGRES_USER:'postgres'
       - POSTGRES_PASSWORD:'postgres'
       - POSTGRES_DB:'postgres'
-  
+
   db-test:
     container_name: postgres-test
     image: postgres:10.4
