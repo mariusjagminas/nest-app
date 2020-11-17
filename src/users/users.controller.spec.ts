@@ -4,12 +4,13 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { clearDatabase, getTestDatabaseConfig } from '../db/test-db';
+import { clearDatabase, getTestDatabaseConfig } from '../../test/test-db';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { SignUpDto } from './user.inteface';
 import { Factory, getFactory } from '../../test/factories';
+import { AuthModule } from '../auth/auth.module';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -23,6 +24,7 @@ describe('UsersController', () => {
       imports: [
         TypeOrmModule.forRoot(config),
         TypeOrmModule.forFeature([User]),
+        AuthModule,
       ],
       providers: [UsersService],
     }).compile();
@@ -59,8 +61,7 @@ describe('UsersController', () => {
       .send(mockedRequest)
       .expect(201);
 
-    expect(result.body.email).toBe(mockedRequest.email);
-    expect(result.body.id).not.toBe(null);
+    expect(result.body.accessToken).not.toBe(null);
 
     const userRepository = getRepository(User);
     const user = await userRepository.findOne({ email: mockedRequest.email });
