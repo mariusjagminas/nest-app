@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthModule } from './auth.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Factory, getFactory } from '../../test/factories';
-import { SignUpDto } from 'src/users/user.inteface';
+import { SignUpDto } from '../users/user.interface';
 
 describe('AuthController', () => {
   let controller: AuthController;

@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { SignUpDto } from './user.inteface';
+import { SignUpDto } from './user.interface';
 
 @Injectable()
 export class UsersService {

@@ -1,6 +1,7 @@
-import { Controller, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
-
+import { ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { SignUpDto } from '../users/user.interface';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -9,7 +10,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('user'))
   @Post('login')
-  async logIn(@Request() req) {
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  async logIn(@Request() req, @Body() _body: SignUpDto) {
     return this.authService.getToken(req.user.id);
   }
 }

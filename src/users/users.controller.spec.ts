@@ -8,7 +8,7 @@ import { clearDatabase, getTestDatabaseConfig } from '../../test/test-db';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { SignUpDto } from './user.inteface';
+import { SignUpDto } from './user.interface';
 import { Factory, getFactory } from '../../test/factories';
 import { AuthModule } from '../auth/auth.module';
 
